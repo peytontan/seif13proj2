@@ -1,15 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import {CSVLink} from 'react-csv'
-import headers from "./csvHeaders.js"
 
 const GoogleSheetCreate = () => {
     const [rowData, setRowData] = useState([])
     const [newAccountsToCreate, setNewAccountsToCreate] = useState(0);
-    const [csvData,setCsvData] = useState([{"ActionType":"CreateChildAccount","ParentAccountCode":"","CustodianCode":"","AccountCodeAppendix":"","DisplayName":"","PartnerCode":""}])
+    const [csvData,setCsvData] = useState([{"ActionType":"","ParentAccountCode":"","CustodianCode":"","AccountCodeAppendix":"","DisplayName":"","PartnerCode":""}])
 
     useEffect(()=>{
         fetchData();
-    },[]) //nothing to monitor, as long as its mounted it should automatically retrieve, user shouldn't need to click on anything (waste effort...) 
+    },[]) //nothing to monitor, as long as its mounted it should automatically retrieve, user shouldn't need to click on anything
+
+    useEffect(()=>{
+      handleDataSelection();
+    },[rowData]) //everytime rowData is changed, then csvData should be updated (called using handleDataSelection)
 
   const fetchData = async () => {
     try {
@@ -66,33 +69,26 @@ const GoogleSheetCreate = () => {
     );
   };
   
-
-  // function ArrayProcessor(props) {
-  //   const {csvrow} = props
-  //   const setCsvData = csvrow.map(item => {
-  //     const parent = 'test'+item[0];
-  //     const custodiancode = item[3];
-  //     return {"ParentAccountCode": parent ,"CustodianCode":custodiancode};
-  //   });
+  const handleDataSelection = () => {
+    // map select columns from rowData into selectedData so that we can update it into csvData
+    const selectedData = rowData.map((row) => ({
+      ActionType: "CreateChildAccount",
+      ParentAccountCode: "test"+row[0],
+      CustodianCode: row[3].toLowerCase(),
+      AccountCodeAppendix: row[4],
+      DisplayName: row[2]+ " " + row[4],
+      PartnerCode: "capitalcompany",
+    }));
   
-  //   return (
-  //     <ul>
-  //       {csvrow.map((item, index) => (
-  //         <li key={index}>
-  //           Parent: {item.ParentAccountCode}, Code: {item.CustodianCode}
-  //         </li>
-  //       ))}
-  //     </ul>
-  //   );
-  // }
-  // console.log(csvData)
-
+    //update csvData state with a shallow copy of selectedData
+    setCsvData([...selectedData]);
+  };
+  
   return (
     <div>
       <NumberOfAccountsToCreate count={newAccountsToCreate}/>
       <FilteredRows accountrow={rowData} />
-      {/* <ArrayProcessor csvrow={csvData}/> */}
-      <button><CSVLink data={csvData} headers={headers}>Download CSV</CSVLink></button>;
+      <button><CSVLink data={csvData}>Download CSV</CSVLink></button>;
     </div>
   );
 };

@@ -8,7 +8,7 @@ const App = () => {
   return (
 <div>
       <nav>
-        <Link to="/">Go to Home Page</Link>
+        <Link to="/">Home</Link>
         <Link to="/Information">Email Information</Link>
         <Link to="/create">generate csv</Link>
         {/* <Link to="/instructions">Instructions</Link> */}

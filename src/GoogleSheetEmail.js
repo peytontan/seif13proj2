@@ -3,8 +3,6 @@ import React, { useState, useEffect } from 'react';
 const GoogleSheetSearchData = () => {
   const [searchInput, setSearchInput] = useState('');
   const [searchResult, setSearchResult] = useState([]);
-  const [email, setEmail] = useState('');
-  const [environment, setEnvironment] = useState('');
   const [searchPerformed, setSearchPerformed] = useState(false);
 
 
