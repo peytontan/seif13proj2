@@ -2,17 +2,26 @@ import React, { useState, useEffect } from 'react';
 import {CSVLink} from 'react-csv'
 
 const GoogleSheetCreate = () => {
-    const [rowData, setRowData] = useState([])
+    const [subRowData, setSubRowData] = useState([])
+    const [mainRowData, setMainRowData] = useState([])
     const [newAccountsToCreate, setNewAccountsToCreate] = useState(0);
-    const [csvData,setCsvData] = useState([{"ActionType":"","ParentAccountCode":"","CustodianCode":"","AccountCodeAppendix":"","DisplayName":"","PartnerCode":""}])
+    const [newMainAccountsToCreate, setNewMainAccountsToCreate] = useState(0);
+    const [csvData,setCsvData] = useState([{}])
+    // const [csvData,setCsvData] = useState([{"ActionType":"","ParentAccountCode":"","CustodianCode":"","AccountCodeAppendix":"","DisplayName":"","PartnerCode":""}])
+    const [csvMainData,setCsvMainData] = useState([{}])
+    // const [csvMainData,setCsvMainData] = useState([{"ActionType":"","ParentAccountCode":"","DisplayName":"","BaseCurrencyCode":"","AccountType":"","AggregatedAccountCode":"","Email":"","Partner":"","IsDemo":"","Password":""}])
 
     useEffect(()=>{
         fetchData();
     },[]) //nothing to monitor, as long as its mounted it should automatically retrieve, user shouldn't need to click on anything
 
     useEffect(()=>{
-      handleDataSelection();
-    },[rowData]) //everytime rowData is changed, then csvData should be updated (called using handleDataSelection)
+      handleSubDataSelection();
+    },[subRowData]) //everytime subRowData is changed, then csvData should be updated (called using handleSubDataSelection)
+
+    useEffect(()=>{
+      handleMainDataSelection();
+    },[mainRowData]) //everytime mainRowData is changed, then csvMainData should be updated (called using handleMainDataSelection)
 
   const fetchData = async () => {
     try {
@@ -30,8 +39,11 @@ const GoogleSheetCreate = () => {
 
         if (values.length) {//if there are data extracted from the api 
           const filteredData = values.filter(row => !row[5]); //we are allowing looking for rows where the fifth column is empty
-          setRowData(filteredData);
+          setSubRowData(filteredData);
           setNewAccountsToCreate(filteredData.length) //count the number of empty rows and update the state
+          const newOrExistingData = values.filter (row => row[1]==="New")
+          setMainRowData(newOrExistingData)
+          setNewMainAccountsToCreate(newOrExistingData.length)
         }
       } else {//if the response is not successful 
         console.error('Error fetching data:', response.status);
@@ -54,7 +66,7 @@ const GoogleSheetCreate = () => {
           <tr>
             <td>{row[4]}</td>
             <td>{row[2] +"/"+ row[3]}</td>
-            <td>{'test'+row[0]+"-"+row[3].toLowerCase()+"-"+row[4]}</td>
+            <td>{'test'+row[0]+"_"+row[9]+"-"+row[3].toLowerCase()+"-"+row[4]}</td>
           </tr>
         ))}
         </>
@@ -62,33 +74,59 @@ const GoogleSheetCreate = () => {
   }
 
   const NumberOfAccountsToCreate = (props) => {
+    const {sub,main} = props
     return (
       <div>
-        <h1>Total number of new accounts to create: {props.count}</h1>
+        <h3>Total number of new MAIN accounts to create: {main}</h3>
+        <h3>Total number of new SUB accounts to create: {sub}</h3>
       </div>
     );
   };
   
-  const handleDataSelection = () => {
-    // map select columns from rowData into selectedData so that we can update it into csvData
-    const selectedData = rowData.map((row) => ({
-      ActionType: "CreateChildAccount",
-      ParentAccountCode: "test"+row[0],
+  const handleSubDataSelection = () => {
+    // map select columns from subRowData into selectedData so that we can update it into csvData
+    const selectedData = subRowData.map((row) => ({
+      ActionType: "CreateSubAccount",
+      ParentAccountCode: "test"+row[0]+"_"+row[9],
       CustodianCode: row[3].toLowerCase(),
       AccountCodeAppendix: row[4],
-      DisplayName: row[2]+ " " + row[4],
-      PartnerCode: "capitalcompany",
+      DisplayName: row[11]+ " " + row[4],
+      PartnerCode: "cchk",
     }));
   
     //update csvData state with a shallow copy of selectedData
     setCsvData([...selectedData]);
   };
+
+  const handleMainDataSelection = () => {
+    // map select columns from subRowData into selectedData so that we can update it into csvData
+    const selectedMainData = mainRowData.map((row) => ({
+      ActionType: "CreateMainAccount",
+      ParentAccountCode: "test"+row[0]+"_"+row[9],
+      DisplayName:row[11],
+      BaseCurrencyCode:row[10],
+      AccountType:"",
+      AggregatedAccountCode:"",
+      Email:"",
+      Partner:"cchk",
+      IsDemo:"",
+      Password:"",
+    }));
+  
+    //update csvData state with a shallow copy of selectedData
+    setCsvMainData([...selectedMainData]);
+  };
+
   
   return (
     <div>
-      <NumberOfAccountsToCreate count={newAccountsToCreate}/>
-      <FilteredRows accountrow={rowData} />
-      <button><CSVLink data={csvData}>Download CSV</CSVLink></button>;
+      <NumberOfAccountsToCreate sub={newAccountsToCreate} main={newMainAccountsToCreate}/>
+      <FilteredRows accountrow={subRowData} />
+      <br/>
+      <button><CSVLink data={csvMainData}>Download main account creation CSV</CSVLink></button>;
+      <br/>
+      <br/>
+      <button><CSVLink data={csvData}>Download sub account creation CSV</CSVLink></button>
     </div>
   );
 };

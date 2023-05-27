@@ -2,14 +2,14 @@ import React from "react"
 import { Routes, Route, Link } from "react-router-dom";
 import GoogleSheetSearchData from "./GoogleSheetEmail";
 import GoogleSheetCreate from "./GoogleSheetCreate";
-import HowToUse from "./HowToUse";
+
 
 const App = () => {
   return (
 <div>
       <nav>
         <Link to="/">Home</Link>
-        <Link to="/Information">Email Information</Link>
+        <Link to="/information">Email Information</Link>
         <Link to="/create">generate csv</Link>
         {/* <Link to="/instructions">Instructions</Link> */}
       </nav>
