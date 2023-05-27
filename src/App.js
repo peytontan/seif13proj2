@@ -1,25 +1,27 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react"
+import { Routes, Route, Link } from "react-router-dom";
+import GoogleSheetSearchData from "./GoogleSheetEmail";
+import GoogleSheetCreate from "./GoogleSheetCreate";
+import HowToUse from "./HowToUse";
 
-function App() {
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+<div>
+      <nav>
+        <Link to="/">Go to Home Page</Link>
+        <Link to="/Information">Email Information</Link>
+        <Link to="/create">generate csv</Link>
+        {/* <Link to="/instructions">Instructions</Link> */}
+      </nav>
+      <div>
+        <Routes>
+          <Route path="/information" element={<GoogleSheetSearchData />} />
+          <Route path="/create" element={<GoogleSheetCreate />} />
+          {/* <Route path="/instructions" element={<HowToUse />} /> */}
+        </Routes>
+      </div>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
