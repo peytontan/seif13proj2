@@ -58,7 +58,7 @@ const GoogleSheetCreate = () => {
       <>
         <table className="filtered-rows-table">
           {type === "Sub" ? (
-            <>
+            <tbody>
               <tr>
                 <th>No.</th>
                 <th>Portfolio</th>
@@ -73,9 +73,9 @@ const GoogleSheetCreate = () => {
                   <td>{`test${row[0]}_${row[9]}-${row[3].toLowerCase()}-${row[4]}`}</td>
                 </tr>
               ))}
-            </>
+            </tbody>
           ) : (
-            <>
+            <tbody>
               <tr>
                 <th>No.</th>
                 <th>Name</th>
@@ -88,7 +88,7 @@ const GoogleSheetCreate = () => {
                   <td>{`test${row[0]}_${row[9]}`}</td>
                 </tr>
               ))}
-            </>
+            </tbody>
           )}
         </table>
       </>

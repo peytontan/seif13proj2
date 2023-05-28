@@ -12,7 +12,7 @@ const App = () => {
       <header>
       <nav className="nav-links">
         <Link to="/">Home</Link>
-        <Link to="/information">Email Information</Link>
+        <Link to="/information">Information</Link>
         <Link to="/create">CSV</Link>
       </nav>
     </header>
