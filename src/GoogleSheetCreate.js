@@ -7,9 +7,7 @@ const GoogleSheetCreate = () => {
     const [newAccountsToCreate, setNewAccountsToCreate] = useState(0);
     const [newMainAccountsToCreate, setNewMainAccountsToCreate] = useState(0);
     const [csvData,setCsvData] = useState([{}])
-    // const [csvData,setCsvData] = useState([{"ActionType":"","ParentAccountCode":"","CustodianCode":"","AccountCodeAppendix":"","DisplayName":"","PartnerCode":""}])
     const [csvMainData,setCsvMainData] = useState([{}])
-    // const [csvMainData,setCsvMainData] = useState([{"ActionType":"","ParentAccountCode":"","DisplayName":"","BaseCurrencyCode":"","AccountType":"","AggregatedAccountCode":"","Email":"","Partner":"","IsDemo":"","Password":""}])
 
     useEffect(()=>{
         fetchData();
@@ -54,31 +52,56 @@ const GoogleSheetCreate = () => {
   };
 
   function FilteredRows(props) { //this will be rendered in the app component 
-    const { accountrow } = props;
+    const { accountrow, type } = props;
+
     return (
+      <>
+        <table className="filtered-rows-table">
+          {type === "Sub" ? (
             <>
-          <tr>
-            <th>Portfolio</th>
-            <th>Custodian/Code</th>
-            <th>Account to create</th>
-          </tr>
-        {accountrow.map((row, index) => (
-          <tr>
-            <td>{row[4]}</td>
-            <td>{row[2] +"/"+ row[3]}</td>
-            <td>{'test'+row[0]+"_"+row[9]+"-"+row[3].toLowerCase()+"-"+row[4]}</td>
-          </tr>
-        ))}
-        </>
+              <tr>
+                <th>No.</th>
+                <th>Portfolio</th>
+                <th>Custodian/Code</th>
+                <th>{type} Account to create</th>
+              </tr>
+              {accountrow.map((row, index) => (
+                <tr key={index}>
+                  <td>{index+1}</td>
+                  <td>{row[4]}</td>
+                  <td>{row[2] + "/" + row[3]}</td>
+                  <td>{`test${row[0]}_${row[9]}-${row[3].toLowerCase()}-${row[4]}`}</td>
+                </tr>
+              ))}
+            </>
+          ) : (
+            <>
+              <tr>
+                <th>No.</th>
+                <th>Name</th>
+                <th>{type} Account to create</th>
+              </tr>
+              {accountrow.map((row, index) => (
+                <tr key={index}>
+                  <td>{index+1}</td>
+                  <td>{row[11]}</td>
+                  <td>{`test${row[0]}_${row[9]}`}</td>
+                </tr>
+              ))}
+            </>
+          )}
+        </table>
+      </>
     );
   }
 
   const NumberOfAccountsToCreate = (props) => {
     const {sub,main} = props
     return (
-      <div>
-        <h3>Total number of new MAIN accounts to create: {main}</h3>
-        <h3>Total number of new SUB accounts to create: {sub}</h3>
+      <div className="number-of-accounts-container">
+        <h3>Summary:</h3>
+        <p>Total number of new MAIN accounts to create: {main}</p>
+        <p>Total number of new SUB accounts to create: {sub}</p>
       </div>
     );
   };
@@ -119,14 +142,17 @@ const GoogleSheetCreate = () => {
 
   
   return (
-    <div>
+    <div className='button-container'>
       <NumberOfAccountsToCreate sub={newAccountsToCreate} main={newMainAccountsToCreate}/>
-      <FilteredRows accountrow={subRowData} />
       <br/>
-      <button><CSVLink data={csvMainData}>Download main account creation CSV</CSVLink></button>;
+      <FilteredRows accountrow={mainRowData} type="Main" />
+      <br/>
+      <button className="button-green"><CSVLink data={csvMainData}>Download main account creation CSV</CSVLink></button>
       <br/>
       <br/>
-      <button><CSVLink data={csvData}>Download sub account creation CSV</CSVLink></button>
+      <FilteredRows accountrow={subRowData} type="Sub" />
+      <br/>
+      <button className="button-green"><CSVLink data={csvData}>Download sub account creation CSV</CSVLink></button>
     </div>
   );
 };

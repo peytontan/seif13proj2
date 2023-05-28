@@ -27,6 +27,7 @@ header {
   justify-content: flex-start;
   align-items: center;
   height: 100vh; /* Adjust the height if needed */
+  padding: 25px
 }
 
 .email-input-container input{
@@ -54,6 +55,7 @@ header {
   padding: 10px;
   text-align: center;
   transform: translateY(0);
+  text-decoration: none; /* Remove underline */
   transition: transform 150ms, box-shadow 150ms;
   user-select: none;
   -webkit-user-select: none;
@@ -69,4 +71,73 @@ header {
   .button-green {
     padding: 10px 30px;
   }
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.heading {
+  background-color: #f2f2f2;
+  padding: 20px;
+  text-align: center;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+.heading h3 {
+  margin: 10px 0;
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+}
+
+
+.filtered-rows-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.filtered-rows-table th {
+  background-color: #f2f2f2;
+  font-weight: bold;
+  padding: 10px;
+  text-align: center;
+}
+
+.filtered-rows-table td {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+  text-align: center;
+}
+
+.filtered-rows-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.filtered-rows-table tr:hover {
+  background-color: #f5f5f5;
+}
+
+.button-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.number-of-accounts-container {
+  /* background-color: #f2f2f2; */
+  padding: 20px;
+  text-align: center;
+  border-radius: 10px;
+}
+
+.number-of-accounts-container h3 {
+  margin: 10px;
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
 }
