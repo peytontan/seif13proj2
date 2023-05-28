@@ -4,7 +4,7 @@ function Home() {
     return (
       <div>
         <p>Click on Email Information to search for client's Email</p>
-        <p>Click on Generate CSV to download csv for main/sub account creation</p>
+        <p>Click on CSV to download csv for main/sub account creation</p>
       </div>
     );
 }

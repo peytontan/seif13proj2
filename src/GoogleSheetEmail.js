@@ -69,14 +69,16 @@ const GoogleSheetSearchData = () => {
   }
 
   return (
-    <div>
+    <div className='email-container'>
+    <div className='email-input-container'>
       <input
         type="text"
         value={searchInput}
         onChange={handleSearchInput}
         placeholder="Client ID?"
       />
-      <button onClick={fetchData}>Search</button>
+      <button className="button-green" onClick={fetchData}>Search</button>
+    </div>
       <SearchInfo searchinformation={searchResult} />
     </div>
   );
