@@ -2,12 +2,12 @@ import React, { useState, useEffect } from 'react';
 import {CSVLink} from 'react-csv'
 
 const GoogleSheetCreate = () => {
-    const [subRowData, setSubRowData] = useState([])
-    const [mainRowData, setMainRowData] = useState([])
-    const [newAccountsToCreate, setNewAccountsToCreate] = useState(0);
-    const [newMainAccountsToCreate, setNewMainAccountsToCreate] = useState(0);
-    const [csvData,setCsvData] = useState([{}])
-    const [csvMainData,setCsvMainData] = useState([{}])
+    const [subRowData, setSubRowData] = useState([]) //sub accounts data
+    const [mainRowData, setMainRowData] = useState([]) //main accounts data
+    const [newAccountsToCreate, setNewAccountsToCreate] = useState(0); //to store the number of sub accunts to create
+    const [newMainAccountsToCreate, setNewMainAccountsToCreate] = useState(0);//to store the number of main acocunts to create
+    const [csvData,setCsvData] = useState([{}]) //filter out the accounts to create from subrowdata and store them in csvData so that it can be downloaded in csv
+    const [csvMainData,setCsvMainData] = useState([{}]) //filter out the accoutns to create from mainrowdata and store them in csvData so that it can be downloaded in csv
 
     useEffect(()=>{
         fetchData();
@@ -40,8 +40,8 @@ const GoogleSheetCreate = () => {
           setSubRowData(filteredData);
           setNewAccountsToCreate(filteredData.length) //count the number of empty rows and update the state
           const newOrExistingData = values.filter (row => row[1]==="New")
-          setMainRowData(newOrExistingData)
-          setNewMainAccountsToCreate(newOrExistingData.length)
+          setMainRowData(newOrExistingData) //set mainRowData to only contain rows that are indicated as new
+          setNewMainAccountsToCreate(newOrExistingData.length) //count number of rows that are indicated new
         }
       } else {//if the response is not successful 
         console.error('Error fetching data:', response.status);
@@ -52,7 +52,7 @@ const GoogleSheetCreate = () => {
   };
 
   function FilteredRows(props) { //this will be rendered in the app component 
-    const { accountrow, type } = props;
+    const { accountrow, type } = props; 
 
     return (
       <>

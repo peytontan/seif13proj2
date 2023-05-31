@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+
 
 const GoogleSheetSearchData = () => {
   const [searchInput, setSearchInput] = useState('');
   const [searchResult, setSearchResult] = useState([]);
   const [searchPerformed, setSearchPerformed] = useState(false);
+  const navigate = useNavigate();
 
 
   const handleSearchInput = event => {
@@ -29,21 +32,18 @@ const GoogleSheetSearchData = () => {
           setSearchResult(filteredData); //update the searchResult to the filtered data where it contains empty rows
           setSearchPerformed(true) //we need to set the action to true because when we click on the button, fetchData will be triggered
         }
-      } else {//if the response is not successful 
+      } else {//if the response from the api is not successful 
         console.error('Error fetching data:', response.status);
       }
-    } catch (error) {
+    } catch (error) { //if error occurs during fetchData, then it will help to log into the console
       console.error('Error fetching data:', error);
     }
   };
 
-  //not needed anymore since i can't send email lol 
-  // useEffect(() => { 
-  //   if (searchResult.length !== 0) { //need to do this or else app will break....
-  //     setEmail(searchResult[0][2]);
-  //     setEnvironment(searchResult[0][3]);
-  //   }
-  // }, [searchResult]);
+
+  const handleButtonClick = () => {
+      navigate(`/copy-html-text/${searchInput}`);
+    };
 
 
   function SearchInfo(props) {
@@ -64,6 +64,10 @@ const GoogleSheetSearchData = () => {
             <li>Env: {row[3]}</li>
           </ul>
         ))}
+          {searchResult.length > 0 && ( 
+                <div className='email-container'>
+          <button className="button-green" onClick={handleButtonClick}>Get HTML text</button></div>
+        )} {/* ensure that only when there is data, the button will appear*/}
       </div>
     );
   }
@@ -75,7 +79,7 @@ const GoogleSheetSearchData = () => {
         type="text"
         value={searchInput}
         onChange={handleSearchInput}
-        placeholder="Client ID?"
+        placeholder="Input ID"
       />
       <button className="button-green" onClick={fetchData}>Search</button>
     </div>
